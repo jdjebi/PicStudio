@@ -14,7 +14,7 @@ class ImageDataLoader:
         self.set_values()
     
     def __str__(self):
-        return f"ImageDataLoader(width={self.width_img},height={self.height_img},background={self.ImageDataLoader})"
+        return f"ImageDataLoader(width={self.width_img},height={self.height_img},background={self.background_color})"
     
     def set_values(self):
         """ Parametres de l'image """

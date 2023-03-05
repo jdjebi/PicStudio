@@ -5,8 +5,8 @@ def centerize_placement(x,y,w,h,offset=(0,0)):
         """
         w_middle = int(w/2)
         h_middle = int(h/2)
-        x1 = x - w_middle + offset[0]
-        y1 = y - h_middle + offset[1]
+        x1 = x - w_middle - offset[0]
+        y1 = y - h_middle - offset[1]
         x2 = x1 + w
         y2 = y1 + h
         return x1, y1, x2, y2

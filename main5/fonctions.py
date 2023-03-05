@@ -24,6 +24,9 @@ def save_with_pillow(canvas_size, imageData):
     img_size = canvas_size
     im = Image.new('RGB',img_size,imageData.background_color)
     imDraw = ImageDraw.Draw(im)
+
+    print(imageData)
+
     formDrawer = FormDrawer(imDraw)
     for form in imageData.forms:
         formDrawer.draw(form)
