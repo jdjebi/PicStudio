@@ -1,0 +1,1 @@
+L'execution du fichier main4.py exige l'installation de Ghostscript: https://www.ghostscript.com/download/gsdnld.html

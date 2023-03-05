@@ -1,0 +1,5 @@
+positions (xy): Vector
+Couleur de fond (fill): RGB(Vector)/L (Value:Gray Scale)
+Couleur de des ligne (outline): RGB (Vector)
+Taille (width): Value
+
