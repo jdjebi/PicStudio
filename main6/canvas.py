@@ -5,13 +5,13 @@ from .positionners import centerize_placement
 from .shape import ShapeBuilder, CanvasShapeDrawer
 from .canvas_shape import naive_shape_drap_discrete_position_computer
 from .cursor import CursorPosition
+from .ImageData import ImageData
 
 logging.basicConfig(format='[%(levelname)s] : %(module)s : %(message)s')
 logger = logging.getLogger("PicCanvas")
 logger.setLevel(logging.DEBUG)
 
 class PicCanvas(tk.Canvas):
-    imageData = None
     canvas_forms_id = []
     canvas_width = 350
     canvas_height = 350
@@ -19,6 +19,7 @@ class PicCanvas(tk.Canvas):
     canvas_bg_color = hexaColorFromRGB((128,128,128))
     canvas_shape_database = {}
     cursor = CursorPosition()
+    imageData = ImageData()
     shapeBuilder = None
 
     def __init__(self, parent, **kwargs):
@@ -33,6 +34,7 @@ class PicCanvas(tk.Canvas):
         self.shapeBuilder = ShapeBuilder(self)
         self.canvasShapeDrawer = CanvasShapeDrawer(self)
         self.config_events()
+        logger.info("Canvas crée")
     
     def ping(self):
         print("Yo! I'm PicCanvas")
@@ -45,7 +47,7 @@ class PicCanvas(tk.Canvas):
         #self.bind("<Button-1>",self.canvas_mouse_left_click)
         pass
     
-    def add_imageData(self, imageData):
+    def set_imageData(self, imageData):
         """ Permet de definit l'instance contenant les donnees de l'image """
         self.imageData = imageData
     
@@ -73,11 +75,16 @@ class PicCanvas(tk.Canvas):
     def create_shape(self,shape_name):
         form = self.shapeBuilder.build(shape_name)
         cform_id = self.canvasShapeDrawer.draw(form)
-        self.canvas_forms_id.append(cform_id)
-        self.imageData.forms.append(form)
         logger.info(f"Creation de la forme : '{form['form']}' avec : {form}")
+        self.register_shape(cform_id,form)
         self.config_shape_event(cform_id)
         return cform_id
+
+    def register_shape(self,cform_id,form):
+        """ Effectue toutes les actions neccessaires pour enregistrer et partager les données des objets """
+        self.canvas_forms_id.append(cform_id)
+        self.imageData.forms.append(form)
+        # Appel ShapeExplorer/Explorateur de formes depuis editFrame (EditorFrame doit devenir un objet) | L'explorateur se fait a jour sur la base de ce qui est contenu dans ImageData/cform
 
     def canvas_mouve_move(self,event):
         self.cursor.update(event.x,event.y)
