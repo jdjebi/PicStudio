@@ -1,4 +1,3 @@
-import logging
 import json
 import tkinter as tk
 import tkinter as ttk
@@ -8,7 +7,7 @@ from main5.ImageDataLoader import ImageDataLoader
 from main5.canvas import PicCanvas
 from main5.window import Window
 from main5.buttons import ShapeSelectorButton
-from main5 import ImageData
+from main5.ImageData import ImageData
 
 # Fonctions
 
@@ -21,7 +20,7 @@ def addToCanvasShape(event,shape_name):
 imageDataLoader = ImageDataLoader()
 
 # Creation de la fenetre
-window =  Window("PicStudio","600x550")
+window =  Window("PicStudio","650x550")
 logger.info("Fenetre crée")
 
 # Frame de l'editeur
@@ -63,11 +62,17 @@ imageDataLoader.load(draw_data)
 # Ajout des données 
 logger.info("Ajout des données")
 canvas.add_imageData(ImageData())
-#canvas.draw_image_data()
 
-canvas.focus_set()
+# canvas.add_imageData(imageDataLoader)
+# canvas.draw_image_data()
 
 save_btn.pack()
 editorFrame.pack(padx=30)
+
+canvas.update()
+
+shape_id = canvas.create_shape("rectangle")
+
+logger.debug("Ajout des données")
 
 window.mainloop()
