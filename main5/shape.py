@@ -3,6 +3,7 @@ from .log import logger
 from .fonctions import hexaColorFromRGB
 
 class ShapeBuilder:
+    """ Construit les formes avec une logique JSON donc de dictionnaire """
 
     form = {
         "form": None,
@@ -27,6 +28,7 @@ class ShapeBuilder:
             rect_pos = centerize_placement(canvas_x_center,canvas_y_center,rect_default_width,rect_default_height,offset=(3,4))
             new_form["form"] = "rectangle"
             new_form["position"] = rect_pos
+            new_form["fill"] = (255,255,255)
         elif(shape_name == "ellipse"):
             rect_default_width = 50
             rect_default_height = 50
@@ -34,8 +36,8 @@ class ShapeBuilder:
             canvas_y_center = self.canvas.winfo_height() // 2
             rect_pos = centerize_placement(canvas_x_center,canvas_y_center,rect_default_width,rect_default_height,offset=(3,4))
             new_form["form"] = "ellipse"
-            new_form["position"] = rect_pos
-        
+            new_form["position"] = rect_pos  
+            new_form["fill"] = (255,255,255)    
         elif(shape_name == "line"):
             rect_default_width = 50
             rect_default_height = 50

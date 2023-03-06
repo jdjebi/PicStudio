@@ -124,9 +124,10 @@ class PicCanvas(tk.Canvas):
         self.log_shape_event(shape_id,event)
         dx, dy = naive_shape_drap_discrete_position_computer(event,self,shape_id)
         self.move(shape_id,dx,dy)
-        logger.debug(f"Move Shape #{shape_id} with {(dx, dy)}")   
+        logger.debug(f"Move Shape #{shape_id} with {(dx, dy)}") 
+
 
         # Mise a jour de ImageData (La mise est local) | Ce traitenement ne pas de faire ici
         position = self.coords(shape_id)
-        self.imageData.forms[0]["position"] = tuple(position)
+        self.imageData.forms[shape_id-1]["position"] = tuple(position)
         logger.debug(f"Shape #{shape_id} is now at {position}")   
