@@ -2,7 +2,7 @@ import logging
 import tkinter as tk
 from .fonctions import hexaColorFromRGB
 from .positionners import centerize_placement
-from .shape import ShapeBuilder, CanvasShapeDrawer
+from .shape import Shape, ShapeBuilder, CanvasShapeDrawer
 from .canvas_shape import naive_shape_drap_discrete_position_computer
 from .cursor import CursorPosition
 from .ImageData import ImageData
@@ -12,14 +12,17 @@ logger = logging.getLogger("PicCanvas")
 logger.setLevel(logging.DEBUG)
 
 class PicCanvas(tk.Canvas):
-    canvas_forms_id = []
     canvas_width = 350
     canvas_height = 350
     canvas_size = None
     canvas_bg_color = hexaColorFromRGB((128,128,128))
-    canvas_shape_database = {}
+    canvas_forms_id = []
+    canvas_shape_database_index = []
+    canvas_shape_database_map = {}
+
     cursor = CursorPosition()
     imageData = ImageData()
+
     shapeBuilder = None
     editor = None
 
@@ -47,7 +50,6 @@ class PicCanvas(tk.Canvas):
     def config_events(self):
         self.bind("<Motion>",self.canvas_mouve_move)
         #self.bind("<Button-1>",self.canvas_mouse_left_click)
-        pass
     
     def set_imageData(self, imageData):
         """ Permet de definit l'instance contenant les donnees de l'image """
@@ -55,7 +57,6 @@ class PicCanvas(tk.Canvas):
     
     def draw_image_data(self):
         """ Dessination des formes de l'image sur la canvas """
-        self.canvas_forms_id = []
         for form in self.imageData.forms:
             if form["form"] in ["rectangle","ellipse","line"]:
                 logger.info(f"Creation de la forme : '{form['form']}' avec : {form}")
@@ -69,28 +70,35 @@ class PicCanvas(tk.Canvas):
                     cform = self.create_oval(position,fill=fill,outline=outline)
                 elif(form["form"]=="line"):
                     cform = self.create_line(position,fill=fill,width=width)
-                self.config_shape_event(cform)
                 self.canvas_forms_id.append(cform)
-                self.register_shape(cform,form,form_append=False)
+                shape = Shape(self,cform,form['form'],form)
+                self.config_shape_event(cform)
+                self.register_shape(cform,form,shape,form_append=False)
             else:
                 logger.warning(f"Form {form['form']} non pris en charge")
     
     """ Manipulation de base des formes """
     def create_shape(self,shape_name):
-        form = self.shapeBuilder.build(shape_name)  # Construit une forme avec une positionnement au centre de la scene
-        cform_id = self.canvasShapeDrawer.draw(form)
-        logger.info(f"Creation de la forme : '{form['form']}' avec : {form}")
-        self.config_shape_event(cform_id)
-        self.register_shape(cform_id,form)
-        return cform_id
+        # Construit une forme avec une positionnement au centre de la scene
+        form = self.shapeBuilder.build(shape_name) 
+        logger.info(f"Creation de la forme : '{shape_name}' avec : {form}")
+        id = self.canvasShapeDrawer.draw(form)
+        shape = Shape(self,id,shape_name,form)
+        logger.info(f"Enregistrement de : {shape}")
+        self.canvas_shape_database_index.append(id)
+        self.canvas_shape_database_map[id] = shape
+        self.config_shape_event(id)
+        self.register_shape(id,form,shape)
+        return id
 
-    def register_shape(self,cform_id,form,form_append=True):
+    def register_shape(self,cform_id:int,form:dict,shape:Shape,form_append=True):
         """ Effectue toutes les actions neccessaires pour enregistrer et partager les données des objets """
         self.canvas_forms_id.append(cform_id)
         if form_append:
             self.imageData.forms.append(form)
         # Appel ShapeExplorer/Explorateur de formes depuis editFrame (EditorFrame doit devenir un objet) | L'explorateur se fait a jour sur la base de ce qui est contenu dans ImageData/cform
-        self.editor.shapeExplorer.add_item_id(cform_id)
+        # self.editor.shapeExplorer.add_item_id(cform_id)
+        self.editor.shapeExplorer.add_shape(shape)
 
     """  Evenements associes aux canvas  """
 
@@ -122,7 +130,6 @@ class PicCanvas(tk.Canvas):
     
     def log_shape_event(self,shape_id,event):
         logger.debug(f"Shape #{shape_id}: {event}")
-
 
     def config_shape_event(self,shape_id):
         """ Permet de configurer les evenements associes aux formes """

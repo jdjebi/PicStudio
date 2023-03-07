@@ -22,3 +22,7 @@ class ShapeExplorerFrame(ttk.Frame):
         logger.debug(item)
         logger.debug(f"Add Shape #{item} to ShapeExplorer TreeView")
         self.treeview.insert('', 'end', item,text=f'Shape #{item }')
+    
+    def add_shape(self, shape):
+        logger.debug(f"Add {shape} to ShapeExplorer TreeView")
+        self.treeview.insert('', 'end',shape.id,text=str(shape))

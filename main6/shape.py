@@ -2,6 +2,21 @@ from .positionners import centerize_placement
 from .log import logger
 from .fonctions import hexaColorFromRGB
 
+class Shape:
+    canvas=None
+    id=int()
+    name="Shape"
+    form={} # Dictionnaire representant les caracteristiques de la form
+
+    def __init__(self,canvas,id:int,name:str,form:dict):
+        self.canvas = canvas
+        self.id = id
+        self.name = name.title()
+        self.form = form
+
+    def __str__(self):
+        return f"{self.name}#{self.id}"
+
 class ShapeBuilder:
     """ Construit les formes avec une logique JSON donc de dictionnaire """
 
