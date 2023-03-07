@@ -69,8 +69,9 @@ class PicCanvas(tk.Canvas):
                     cform = self.create_oval(position,fill=fill,outline=outline)
                 elif(form["form"]=="line"):
                     cform = self.create_line(position,fill=fill,width=width)
-                self.canvas_forms_id.append(cform)
                 self.config_shape_event(cform)
+                self.canvas_forms_id.append(cform)
+                self.register_shape(cform,form,form_append=False)
             else:
                 logger.warning(f"Form {form['form']} non pris en charge")
     
@@ -79,16 +80,16 @@ class PicCanvas(tk.Canvas):
         form = self.shapeBuilder.build(shape_name)  # Construit une forme avec une positionnement au centre de la scene
         cform_id = self.canvasShapeDrawer.draw(form)
         logger.info(f"Creation de la forme : '{form['form']}' avec : {form}")
-        self.register_shape(cform_id,form)
         self.config_shape_event(cform_id)
+        self.register_shape(cform_id,form)
         return cform_id
 
-    def register_shape(self,cform_id,form):
+    def register_shape(self,cform_id,form,form_append=True):
         """ Effectue toutes les actions neccessaires pour enregistrer et partager les données des objets """
         self.canvas_forms_id.append(cform_id)
-        self.imageData.forms.append(form)
+        if form_append:
+            self.imageData.forms.append(form)
         # Appel ShapeExplorer/Explorateur de formes depuis editFrame (EditorFrame doit devenir un objet) | L'explorateur se fait a jour sur la base de ce qui est contenu dans ImageData/cform
-        logger.debug(cform_id)
         self.editor.shapeExplorer.add_item_id(cform_id)
 
     """  Evenements associes aux canvas  """

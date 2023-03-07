@@ -35,10 +35,10 @@ draw_data = json.load(draw_file)
 
 # Preparation des données
 # logger.info("Préparation des données")
-# imageDataLoader.load(draw_data)
+imageDataLoader.load(draw_data)
 # Ajout des données 
-# editorFrame.canvas.set_imageData(imageDataLoader)
-# editorFrame.canvas.draw_image_data()
+editorFrame.canvas.set_imageData(imageDataLoader)
+editorFrame.canvas.draw_image_data()
 
 save_btn.pack()
 
@@ -50,5 +50,4 @@ editorFrame.canvas.create_shape("rectangle")
 editorFrame.canvas.create_shape("line")
 editorFrame.canvas.create_shape("ellipse")
 
-   
 window.mainloop()

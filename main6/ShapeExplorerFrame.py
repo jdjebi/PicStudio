@@ -11,7 +11,7 @@ class ShapeExplorerFrame(ttk.Frame):
         # Creation de la treeview
         self.treeview = ttk.Treeview(editor) 
         self.treeview.pack(side="left") 
-        self.initTreeViewData()
+        #self.initTreeViewData()
     
     def initTreeViewData(self):
         logger.debug("Init ShapeExplorer TreeView")
@@ -20,5 +20,5 @@ class ShapeExplorerFrame(ttk.Frame):
     
     def add_item_id(self, item):
         logger.debug(item)
-        logger.debug("Add Shape #{item} to ShapeExplorer TreeView")
+        logger.debug(f"Add Shape #{item} to ShapeExplorer TreeView")
         self.treeview.insert('', 'end', item,text=f'Shape #{item }')

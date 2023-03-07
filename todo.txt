@@ -1,1 +1,2 @@
-Afficher la liste des formes dans l'editeur(lecanvas)
+[x] Afficher le nom des formes avec leur id dans l'explorateur
+[x] Afficher la liste des formes dans l'editeur(lecanvas) 
