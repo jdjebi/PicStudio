@@ -19,15 +19,11 @@ def save_with_canvas(canvas):
     img = Image.open("canvas.eps")
     img.save("canvas_postscript.png", "png")
 
-def save_with_pillow(canvas_size, imageData):
+def save_with_pillow(canvas):
     """ Sauvegarde avec pillow en creant une image à partir des données """
-    img_size = canvas_size
-    im = Image.new('RGB',img_size,imageData.background_color)
+    im = Image.new('RGB',canvas.canvas_size,canvas.imageData.background_color)
     imDraw = ImageDraw.Draw(im)
-
-    print(imageData)
-
     formDrawer = FormDrawer(imDraw)
-    for form in imageData.forms:
+    for form in canvas.imageData.forms:
         formDrawer.draw(form)
     im.save('canvas_pillow.png','PNG')

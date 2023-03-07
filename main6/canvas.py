@@ -21,15 +21,17 @@ class PicCanvas(tk.Canvas):
     cursor = CursorPosition()
     imageData = ImageData()
     shapeBuilder = None
+    editor = None
 
-    def __init__(self, parent, **kwargs):
+    def __init__(self, editor, **kwargs):
         super().__init__(
-            parent,
+            editor,
             width=self.canvas_width, 
             height=self.canvas_height, 
             background=self.canvas_bg_color,
             **kwargs
         )
+        self.editor = editor
         self.canvas_size = (self.canvas_width,self.canvas_height)
         self.shapeBuilder = ShapeBuilder(self)
         self.canvasShapeDrawer = CanvasShapeDrawer(self)
@@ -72,8 +74,9 @@ class PicCanvas(tk.Canvas):
             else:
                 logger.warning(f"Form {form['form']} non pris en charge")
     
+    """ Manipulation de base des formes """
     def create_shape(self,shape_name):
-        form = self.shapeBuilder.build(shape_name)
+        form = self.shapeBuilder.build(shape_name)  # Construit une forme avec une positionnement au centre de la scene
         cform_id = self.canvasShapeDrawer.draw(form)
         logger.info(f"Creation de la forme : '{form['form']}' avec : {form}")
         self.register_shape(cform_id,form)
@@ -85,6 +88,10 @@ class PicCanvas(tk.Canvas):
         self.canvas_forms_id.append(cform_id)
         self.imageData.forms.append(form)
         # Appel ShapeExplorer/Explorateur de formes depuis editFrame (EditorFrame doit devenir un objet) | L'explorateur se fait a jour sur la base de ce qui est contenu dans ImageData/cform
+        logger.debug(cform_id)
+        self.editor.shapeExplorer.add_item_id(cform_id)
+
+    """  Evenements associes aux canvas  """
 
     def canvas_mouve_move(self,event):
         self.cursor.update(event.x,event.y)
@@ -106,9 +113,7 @@ class PicCanvas(tk.Canvas):
         # cform = canvas.create_rectangle(rect_pos)
         self.create_rectangle(rect_pos) 
         logger.info(f"Set Rectangle at {rect_pos} avec {form}")
-    
-    """ Modification effectuee sur les formes """
-    
+        
     """ Evenements associes aux formes """
 
     def get_current_shape_id(self):

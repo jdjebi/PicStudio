@@ -16,27 +16,14 @@ from main6.editor import EditorFrame
 imageDataLoader = ImageDataLoader()
 
 # Creation de la fenetre
-window =  Window("PicStudio","650x550")
+window =  Window("PicStudio","750x550")
 
 # Frame de l'editeur
 editorFrame = EditorFrame(window,relief=tk.GROOVE)
 
-
-# Frame des boutons de formes
-shapesSelectorFrame = ttk.Frame(editorFrame,borderwidth=2, relief=tk.GROOVE)
-shapesSelectorFrame.pack(side="left",fill="y",padx=4,pady=4)
-
-## Boutons de selections des formes
-rectangle_btn = ShapeSelectorButton(shapesSelectorFrame,editorFrame.canvas,"rectangle",text="Rectangle")
-ellipse_btn = ShapeSelectorButton(shapesSelectorFrame,editorFrame.canvas,"ellipse",text="Ellipse")
-line_btn = ShapeSelectorButton(shapesSelectorFrame,editorFrame.canvas,"line",text="Ligne")
-rectangle_btn.pack()
-ellipse_btn.pack()
-line_btn.pack()
-
 # Bouton d'enregistrement
 def save_btn_cmd():
-    save_with_pillow(editorFrame.canvas_size,editorFrame.imageData)
+    save_with_pillow(editorFrame.canvas)
     logger.info("Canvas exporter!")
 
 save_btn = tk.Button(window, text="Exporter", command=save_btn_cmd)
@@ -47,26 +34,21 @@ draw_file = open("basic_geoforme.json")
 draw_data = json.load(draw_file)
 
 # Preparation des données
-logger.info("Préparation des données")
-imageDataLoader.load(draw_data)
-
+# logger.info("Préparation des données")
+# imageDataLoader.load(draw_data)
 # Ajout des données 
-# canvas.set_imageData(imageDataLoader)
-# canvas.draw_image_data()
+# editorFrame.canvas.set_imageData(imageDataLoader)
+# editorFrame.canvas.draw_image_data()
 
 save_btn.pack()
-editorFrame.pack(side="right",padx=30)
+
+editorFrame.pack(fill="x")
 
 editorFrame.canvas.update()
 
-shape_id = editorFrame.canvas.create_shape("rectangle")
+editorFrame.canvas.create_shape("rectangle")
+editorFrame.canvas.create_shape("line")
+editorFrame.canvas.create_shape("ellipse")
 
-logger.debug("Ajout des données")
-
-treeview = ttk.Treeview(window) 
-treeview.pack(side="left") 
-
-for fid in editorFrame.canvas.canvas_forms_id:
-    treeview.insert('', 'end', fid,text=f'Shape #{fid}')
    
 window.mainloop()
