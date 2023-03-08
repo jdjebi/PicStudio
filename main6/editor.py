@@ -8,9 +8,12 @@ from .ShapeExplorerFrame import ShapeExplorerFrame
 class EditorFrame(ttk.Frame):
     canvas = None
     shapeExplorer = None
+    window=None
     
-    def __init__(self, parent, **kwargs):
-        super().__init__(parent,**kwargs)
+    def __init__(self, window, **kwargs):
+        super().__init__(window,**kwargs)
+
+        self.window = window
 
         # Creation de la zone de dessin de la fenetre
         self.canvas = PicCanvas(self)

@@ -78,6 +78,7 @@ class PicCanvas(tk.Canvas):
                 logger.warning(f"Form {form['form']} non pris en charge")
     
     """ Manipulation de base des formes """
+
     def create_shape(self,shape_name):
         # Construit une forme avec une positionnement au centre de la scene
         form = self.shapeBuilder.build(shape_name) 
@@ -104,6 +105,7 @@ class PicCanvas(tk.Canvas):
 
     def canvas_mouve_move(self,event):
         self.cursor.update(event.x,event.y)
+        self.editor.window.statusBarFrame.updateCursorPosition(self.cursor)
 
     def canvas_mouse_left_click(self,event):
         logger.info(f"Canvas MouseLeftClick ({event})")
