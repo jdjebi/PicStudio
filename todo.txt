@@ -1,4 +1,4 @@
 [] Panneau pour manipuler les proprietes des formes
-[xr] Afficher les coordonnées du curseur le canvas en bas de la page
+[x] Afficher les coordonnées du curseur le canvas en bas de la page
 [x] Afficher le nom des formes avec leur id dans l'explorateur
 [x] Afficher la liste des formes dans l'editeur(lecanvas) 
