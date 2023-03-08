@@ -8,10 +8,10 @@ from main7.editor.ShapeInspectorFrame import ShapeInspectorFrame
 
 class EditorFrame(ttk.Frame):
     window=None
-    canvas = None
-    shapeExplorer = None
-    shapesSelector = None
-    shapeInspector = None
+    canvas:PicCanvas = None
+    shapeExplorer:ShapeExplorerFrame
+    shapesSelector:ttk.Frame
+    shapeInspector:ShapeInspectorFrame
     
     def __init__(self, window, **kwargs):
         super().__init__(window,**kwargs)

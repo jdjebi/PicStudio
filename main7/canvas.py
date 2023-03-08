@@ -5,14 +5,7 @@ from .positionners import centerize_placement
 from .canvas_shape import naive_shape_drap_discrete_position_computer
 from .cursor import CursorPosition
 from .ImageData import ImageData
-
-import importlib
-
-shape_module = importlib.import_module("main7.shape")
-
-Shape = shape_module.Shape
-ShapeBuilder = shape_module.ShapeBuilder
-CanvasShapeDrawer = shape_module.CanvasShapeDrawer
+from main7.shape import Shape, ShapeBuilder, CanvasShapeDrawer
 
 logging.basicConfig(format='[%(levelname)s] : %(module)s : %(message)s')
 logger = logging.getLogger("PicCanvas")
@@ -21,7 +14,7 @@ logger.setLevel(logging.DEBUG)
 class PicCanvas(tk.Canvas):
     canvas_width = 350
     canvas_height = 350
-    canvas_size = None
+    canvas_size:tuple
     canvas_bg_color = hexaColorFromRGB((128,128,128))
     canvas_forms_id = []
     canvas_shape_database_index = []
@@ -30,7 +23,9 @@ class PicCanvas(tk.Canvas):
     cursor = CursorPosition()
     imageData = ImageData()
 
-    shapeBuilder = None
+    shapeBuilder:ShapeBuilder
+    canvasShapeDrawer:CanvasShapeDrawer
+
     editor = None
 
     def __init__(self, editor, **kwargs):
@@ -56,7 +51,6 @@ class PicCanvas(tk.Canvas):
 
     def config_events(self):
         self.bind("<Motion>",self.canvas_mouve_move)
-        #self.bind("<Button-1>",self.canvas_mouse_left_click)
     
     def set_imageData(self, imageData):
         """ Permet de definit l'instance contenant les donnees de l'image """

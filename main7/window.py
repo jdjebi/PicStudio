@@ -9,15 +9,15 @@ class Window(tk.Tk):
     win_title = "PicStudio"
 
     # Frame de la barre d'etat
-    statusBarFrame = None
+    statusBarFrame:StatusBarFrame
 
     # Frame de l'editeur
-    editorFrame = None
+    editorFrame:EditorFrame
 
     # Bouton d'exportation des images
-    save_btn = None
+    save_btn:tk.Button
 
-    def __init__(self,title,win_size,**kwargs):
+    def __init__(self,title:str,win_size:str,**kwargs):
         super().__init__(**kwargs)
         self.win_title = title
         self.window_geometry = win_size
