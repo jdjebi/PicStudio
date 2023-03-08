@@ -72,15 +72,17 @@ class PicCanvas(tk.Canvas):
                 outline = hexaColorFromRGB(form['outline'])
                 width = form['width']
                 if(form["form"]=="rectangle"):
-                    cform = self.create_rectangle(position,fill=fill,outline=outline)
+                    shape_id = self.create_rectangle(position,fill=fill,outline=outline)
                 elif(form["form"]=="ellipse"):
-                    cform = self.create_oval(position,fill=fill,outline=outline)
+                    shape_id = self.create_oval(position,fill=fill,outline=outline)
                 elif(form["form"]=="line"):
-                    cform = self.create_line(position,fill=fill,width=width)
-                self.canvas_forms_id.append(cform)
-                shape = Shape(self,cform,form['form'],form)
-                self.config_shape_event(cform)
-                self.register_shape(cform,form,shape,form_append=False)
+                    shape_id = self.create_line(position,fill=fill,width=width)
+                self.canvas_forms_id.append(shape_id)
+                shape = Shape(self,shape_id,form['form'],form)
+                self.canvas_shape_database_index.append(id)
+                self.canvas_shape_database_map[shape_id] = shape
+                self.config_shape_event(shape_id)
+                self.register_shape(shape_id,form,shape,form_append=False)
             else:
                 logger.warning(f"Form {form['form']} non pris en charge")
     
@@ -104,9 +106,8 @@ class PicCanvas(tk.Canvas):
         self.canvas_forms_id.append(cform_id)
         if form_append:
             self.imageData.forms.append(form)
-        # Appel ShapeExplorer/Explorateur de formes depuis editFrame (EditorFrame doit devenir un objet) | L'explorateur se fait a jour sur la base de ce qui est contenu dans ImageData/cform
-        # self.editor.shapeExplorer.add_item_id(cform_id)
         self.editor.shapeExplorer.add_shape(shape)
+        print(len(self.imageData.forms))
 
     """  Evenements associes aux canvas  """
 
@@ -143,7 +144,22 @@ class PicCanvas(tk.Canvas):
     def config_shape_event(self,shape_id):
         """ Permet de configurer les evenements associes aux formes """
         self.tag_bind(shape_id,"<Enter>", self.shape_mouse_enter_event)
+        self.tag_bind(shape_id,"<Button-1>", self.shape_clicked)
         self.tag_bind(shape_id,"<B1-Motion>", self.shape_drag_event)
+
+    """ Evenements """
+
+    def get_current_shape(self):
+        id = self.get_current_shape_id()
+        return self.get_shape(id)
+
+    def get_shape(self,id):
+        return self.canvas_shape_database_map[id]
+
+    def shape_clicked(self,event):
+        shape = self.get_current_shape()
+        logger.debug(f"{shape} clicked")
+        self.editor.shapeInspector.inspect(shape)
 
     def shape_mouse_enter_event(self,event):
         shape_id = self.get_current_shape_id()
@@ -155,7 +171,6 @@ class PicCanvas(tk.Canvas):
         dx, dy = naive_shape_drap_discrete_position_computer(event,self,shape_id)
         self.move(shape_id,dx,dy)
         logger.debug(f"Move Shape #{shape_id} with {(dx, dy)}") 
-
 
         # Mise a jour de ImageData (La mise est local) | Ce traitenement ne pas de faire ici
         position = self.coords(shape_id)

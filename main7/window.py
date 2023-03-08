@@ -1,8 +1,8 @@
 import tkinter as tk
 from .log import logger
-from .editor import EditorFrame
+from main7.editor.EditorFrame import EditorFrame
 from .StatusBarFrame import StatusBarFrame
-from main6.fonctions import save_with_pillow
+from main7.fonctions import save_with_pillow
 
 class Window(tk.Tk):
     window_geometry = "500x500"
