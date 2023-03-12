@@ -11,3 +11,10 @@ Centre
 
 # Couleur de Fond
 # Couleur de bordure
+
+# Dimensionnement
+
+Largeur (width)
+Longueur (height)
+Bordure 
+Longueur (ligne)
