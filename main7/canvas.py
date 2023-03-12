@@ -152,10 +152,8 @@ class PicCanvas(tk.Canvas):
     def shape_clicked(self,event):
         shape = self.get_current_shape()
         logger.debug(f"{shape} clicked")
-
         # Mise a jour interne de la forme
         shape.internal_update_position_by_canvas()
-
         # Mise a jour de l'inspecteur
         self.editor.shapeInspector.inspect(shape)
 

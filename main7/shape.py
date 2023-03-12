@@ -4,6 +4,7 @@ from .fonctions import hexaColorFromRGB
 class Shape:
 
     canvas=None
+    type=None
     name="Shape"
 
     # Dictionnaire representant les caracteristiques de la form
@@ -18,11 +19,26 @@ class Shape:
     width:float
     height:float
 
+    fill = None
+    outline = None
+
     def __init__(self,canvas,id:int,name:str,form:dict):
         self.canvas = canvas
         self.id = id
+        self.type = name
         self.name = name.title()
         self.form = form
+
+        self.fill = canvas.itemcget(id,"fill")
+
+        if self.type=="line":
+            self.outline = ""
+        else:
+            self.outline = canvas.itemcget(id,"outline")
+        
+        print("Color Map : ",self.name,"-",self.fill,"-",self.outline)
+
+
 
     def __str__(self):
         return f"{self.name} #{self.id}"
@@ -38,8 +54,6 @@ class Shape:
         self.height = y2 - y1
         self.center_x =  x1 + (self.width / 2)
         self.center_y = y2 - (self.height / 2)
-
-
 
 
 class ShapeBuilder:
@@ -91,6 +105,7 @@ class ShapeBuilder:
         else:
             raise Exception("Forme '{shape_name}' inconnue")
         return new_form
+
 
 class CanvasShapeDrawer:
 
