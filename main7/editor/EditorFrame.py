@@ -8,7 +8,7 @@ from main7.editor.ShapeInspectorFrame import ShapeInspectorFrame
 
 class EditorFrame(ttk.Frame):
     window=None
-    canvas:PicCanvas = None
+    canvas:PicCanvas
     shapeExplorer:ShapeExplorerFrame
     shapesSelector:ttk.Frame
     shapeInspector:ShapeInspectorFrame

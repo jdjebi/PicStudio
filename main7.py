@@ -4,7 +4,7 @@ from main7.ImageDataLoader import ImageDataLoader
 from main7.window import Window
 
 # Creation de la fenetre
-window =  Window("PicStudio","1200x550")
+window =  Window("PicStudio","900x550")
 
 window.save_btn.pack()
 window.editorFrame.pack(fill="x")

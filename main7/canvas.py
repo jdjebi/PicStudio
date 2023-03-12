@@ -101,7 +101,6 @@ class PicCanvas(tk.Canvas):
         if form_append:
             self.imageData.forms.append(form)
         self.editor.shapeExplorer.add_shape(shape)
-        print(len(self.imageData.forms))
 
     """  Evenements associes aux canvas  """
 
@@ -147,12 +146,17 @@ class PicCanvas(tk.Canvas):
         id = self.get_current_shape_id()
         return self.get_shape(id)
 
-    def get_shape(self,id):
+    def get_shape(self,id) -> Shape:
         return self.canvas_shape_database_map[id]
 
     def shape_clicked(self,event):
         shape = self.get_current_shape()
         logger.debug(f"{shape} clicked")
+
+        # Mise a jour interne de la forme
+        shape.internal_update_position_by_canvas()
+
+        # Mise a jour de l'inspecteur
         self.editor.shapeInspector.inspect(shape)
 
     def shape_mouse_enter_event(self,event):
@@ -161,6 +165,7 @@ class PicCanvas(tk.Canvas):
     
     def shape_drag_event(self,event):
         shape_id = self.get_current_shape_id()
+        shape = self.get_shape(shape_id)
         self.log_shape_event(shape_id,event)
         dx, dy = naive_shape_drap_discrete_position_computer(event,self,shape_id)
         self.move(shape_id,dx,dy)
@@ -169,4 +174,10 @@ class PicCanvas(tk.Canvas):
         # Mise a jour de ImageData (La mise est local) | Ce traitenement ne pas de faire ici
         position = self.coords(shape_id)
         self.imageData.forms[shape_id-1]["position"] = tuple(position)
-        logger.debug(f"Shape #{shape_id} is now at {position}")   
+        logger.debug(f"Shape #{shape_id} is now at {position}")  
+
+        # Mise a jour interne de la forme
+        shape.internal_update_position_by_canvas()
+
+        # Mise a jour de l'inspecteur
+        self.editor.shapeInspector.inspect(shape)

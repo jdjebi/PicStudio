@@ -1,0 +1,13 @@
+# General
+Forme ID
+Nom forme
+
+# Position
+X
+Y
+Centre
+
+# Coloration
+
+# Couleur de Fond
+# Couleur de bordure

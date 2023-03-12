@@ -4,9 +4,19 @@ from .fonctions import hexaColorFromRGB
 class Shape:
 
     canvas=None
-    id=int()
     name="Shape"
-    form={} # Dictionnaire representant les caracteristiques de la form
+
+    # Dictionnaire representant les caracteristiques de la form
+    form:dict 
+    id:int
+    x1:float
+    y1:float
+    x2:float
+    y2:float
+    center_x:float
+    center_y:float
+    width:float
+    height:float
 
     def __init__(self,canvas,id:int,name:str,form:dict):
         self.canvas = canvas
@@ -16,6 +26,21 @@ class Shape:
 
     def __str__(self):
         return f"{self.name} #{self.id}"
+
+    def internal_update_position_by_canvas(self):
+        position = self.canvas.coords(self.id)
+        x1, y1, x2, y2 = position
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+        self.width = x2 - x1
+        self.height = y2 - y1
+        self.center_x =  x1 + (self.width / 2)
+        self.center_y = y2 - (self.height / 2)
+
+
+
 
 class ShapeBuilder:
     """ Construit les formes avec une logique JSON donc de dictionnaire """
@@ -63,7 +88,6 @@ class ShapeBuilder:
             new_form["fill"] = (0,0,0)
             new_form["position"] = rect_pos
             new_form["width"] = 1
-
         else:
             raise Exception("Forme '{shape_name}' inconnue")
         return new_form
