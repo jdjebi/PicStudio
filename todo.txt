@@ -1,4 +1,5 @@
 [] Redimensionnement des formes (Rectangle)
+    - Ajouter une couche de selection lorsqu'un forme est sélectionnée
 [x] Ajouter une section pour voir la taille de la forme et celle des bordure
 [x] Faire en sorte que l'inpecteur affiche les proprietes des formes
 [x] Panneau pour manipuler les proprietes des formes (Inpecteur de forme)
