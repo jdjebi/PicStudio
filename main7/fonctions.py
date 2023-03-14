@@ -1,4 +1,5 @@
 """ Fonctions """
+import math
 from PIL import Image, ImageDraw
 from .FormDrawer import FormDrawer
 
@@ -27,3 +28,11 @@ def save_with_pillow(canvas):
     for form in canvas.imageData.forms:
         formDrawer.draw(form)
     im.save('canvas_pillow.png','PNG')
+
+def compute_distance_euclidian_for_2_position(pos1,pos2):
+    """ Calcul la distance euclidienne entre deux """
+    x1 = pos1[0]
+    y1 = pos1[1]
+    x2 = pos2[0]
+    y2 = pos2[1]
+    return math.sqrt(math.pow((x1 - x2),2) + math.pow((y1 - y2),2))

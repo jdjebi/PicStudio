@@ -8,7 +8,7 @@ window =  Window("PicStudio","900x550")
 
 window.save_btn.pack()
 window.editorFrame.pack(fill="x")
-
+window.statusBarFrame.pack(side="bottom",fill="x")
 window.editorFrame.canvas.update()
 
 # Chargement des données de l'image depuis json

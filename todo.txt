@@ -1,6 +1,8 @@
-[] Ajouter une section de voir la taille de la forme et celle des bordure
+[] Redimensionnement des formes (Rectangle)
+[x] Ajouter une section pour voir la taille de la forme et celle des bordure
 [x] Faire en sorte que l'inpecteur affiche les proprietes des formes
 [x] Panneau pour manipuler les proprietes des formes (Inpecteur de forme)
 [x] Afficher les coordonnées du curseur le canvas en bas de la page
 [x] Afficher le nom des formes avec leur id dans l'explorateur
 [x] Afficher la liste des formes dans l'editeur(lecanvas) 
+
