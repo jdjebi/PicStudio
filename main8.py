@@ -9,9 +9,6 @@ from tkinter import ttk
 # Creation de la fenetre
 window =  Window("PicStudio","900x550")
 
-window.save_btn.pack()
-window.editorFrame.pack(fill="both",expand="true")
-window.statusBarFrame.pack(side="bottom",fill="x")
 
 window.editorFrame.canvas.update()
 
@@ -33,8 +30,6 @@ def resize_by_adding(x):
     window.editorFrame.canvas.coords(shape.id,rect)
     shape.internal_update_position_by_canvas()
     window.editorFrame.shapeInspector.inspect(shape)
-
-
 value = tk.DoubleVar()
 scale = tk.Scale(window.editorFrame.shapeInspector, variable=value,command=resize_by_adding)
 scale.pack()

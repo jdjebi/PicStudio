@@ -1,5 +1,6 @@
 from .positionners import centerize_placement
 from .fonctions import hexaColorFromRGB
+from main8.tkinter import *
 
 class Shape:
 
@@ -40,7 +41,7 @@ class Shape:
         
         print("Color Map : ",self.name,"-",self.fill,"-",self.outline)
 
-
+        self.create_bounder_box()
 
     def __str__(self):
         return f"{self.name} #{self.id}"
@@ -56,7 +57,36 @@ class Shape:
         self.height = y2 - y1
         self.center_x =  x1 + (self.width / 2)
         self.center_y = y2 - (self.height / 2)
+        self.update_bounder_box()
+        
+    
+    def create_bounder_box(self):
+        if self.type == "rectangle":
+            position = self.canvas.coords(self.id)
+            x1, y1, x2, y2 = position
+            offset = 1.5
+            x1 = x1 - offset
+            y1 = y1 - offset
+            x2 = x2 + offset
+            y2 = y2 + offset
+            new_position = x1, y1, x2, y2
+            self.rect_id = self.canvas.create_rectangle(new_position,dash=(3,3),outline="blue",state="disabled")
 
+    def update_bounder_box(self):
+        if self.type == "rectangle":
+            position = self.canvas.coords(self.id)
+            x1, y1, x2, y2 = position
+            offset = 1.5
+            x1 = x1 - offset
+            y1 = y1 - offset
+            x2 = x2 + offset
+            y2 = y2 + offset
+            new_position = x1, y1, x2, y2
+            self.canvas.coords(self.rect_id,new_position)
+    
+    def focus_on(self):
+        pass
+ 
 
 class ShapeBuilder:
     """ Construit les formes avec une logique JSON donc de dictionnaire """

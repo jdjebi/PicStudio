@@ -36,9 +36,7 @@ class EditorFrame(ttk.Frame):
 
         # Creation de la frame de l'inspecteur de formes
         self.shapeInspector = ShapeInspectorFrame(self,borderwidth=2,relief=tk.GROOVE,padx=4,pady=4)
-
         self.shapeInspector.configure(width=300)
-
 
         # Placement des frames
         self.shapesSelector.pack(side="left",fill="y",padx=4,pady=4)

@@ -28,6 +28,10 @@ class Window(tk.Tk):
         self.statusBarFrame = StatusBarFrame(self)
         self.save_btn = tk.Button(self, text="Exporter", command=self.save_btn_cmd)
 
+        self.save_btn.pack()
+        self.editorFrame.pack(fill="both",expand="true")
+        self.statusBarFrame.pack(side="bottom",fill="x")
+
         logger.info("Fenetre crée")
     
     """ Evenement """

@@ -152,8 +152,13 @@ class PicCanvas(tk.Canvas):
     def shape_clicked(self,event):
         shape = self.get_current_shape()
         logger.debug(f"{shape} clicked")
+
+        # Donne le focus à la focus
+        shape.focus_on()
+
         # Mise a jour interne de la forme
-        shape.internal_update_position_by_canvas()
+        shape.internal_update_position_by_canvas() # Pas utile en vrai mais pour les test ouis
+
         # Mise a jour de l'inspecteur
         self.editor.shapeInspector.inspect(shape)
 
