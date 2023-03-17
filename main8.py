@@ -7,7 +7,7 @@ import tkinter as tk
 from tkinter import ttk
 
 # Creation de la fenetre
-window =  Window("PicStudio","900x550")
+window =  Window("PicStudio","900x500")
 
 window.editorFrame.canvas.update()
 
