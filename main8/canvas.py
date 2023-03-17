@@ -17,18 +17,19 @@ class PicCanvas(tk.Canvas):
     canvas_width = 350
     canvas_height = 350
     canvas_size:tuple
-    canvas_bg_color = hexaColorFromRGB((128,128,128))
+    canvas_bg_color = hexaColorFromRGB((190,190,190))
     canvas_forms_id = []
     canvas_shape_database_index = []
     canvas_shape_database_map = {}
-
     cursor = CursorPosition()
     imageData = ImageData()
-
     shapeBuilder:ShapeBuilder
     canvasShapeDrawer:CanvasShapeDrawer
-
+    shape_selected_id:int
     editor = None
+
+    is_shape_dragging=False
+    is_cursor_in_shape=False
 
     def __init__(self, editor, **kwargs):
         super().__init__(
@@ -40,6 +41,7 @@ class PicCanvas(tk.Canvas):
         )
         self.editor = editor
         self.canvas_size = (self.canvas_width,self.canvas_height)
+        self.shape_selected_id = None
         self.shapeBuilder = ShapeBuilder(self)
         self.canvasShapeDrawer = CanvasShapeDrawer(self)
         self.config_events()
@@ -53,7 +55,12 @@ class PicCanvas(tk.Canvas):
 
     def config_events(self):
         self.bind("<Motion>",self.canvas_mouve_move)
+        self.bind("<Button-1>",self.canvas_clicked)
     
+    def test(self,event):
+        print("super")
+
+
     def set_imageData(self, imageData):
         """ Permet de definit l'instance contenant les donnees de l'image """
         self.imageData = imageData
@@ -86,25 +93,15 @@ class PicCanvas(tk.Canvas):
 
     def create_shape(self,shape_name) -> Shape:
         # Construit une forme avec une positionnement au centre de la scene
-
         form = self.shapeBuilder.build(shape_name) 
-
         logger.info(f"Creation de la forme : '{shape_name}' avec : {form}")
-
         id = self.canvasShapeDrawer.draw(form)
-
         shape = Shape(self,id,shape_name,form)
-
         logger.info(f"Enregistrement de : {shape}")
-
         self.canvas_shape_database_index.append(id)
-
         self.canvas_shape_database_map[id] = shape
-
         self.config_shape_event(id)
-
         self.register_shape(id,form,shape)
-
         return shape
 
     def register_shape(self,cform_id:int,form:dict,shape:Shape,form_append=True):
@@ -138,6 +135,26 @@ class PicCanvas(tk.Canvas):
         self.create_rectangle(rect_pos) 
         logger.info(f"Set Rectangle at {rect_pos} avec {form}")
         
+    def canvas_clicked(self,event):
+        ids = self.find_withtag('current')
+        logger.debug(f"Canvas MouseClick: {event} : {ids}")
+        if len(ids) > 0:
+            id = ids[0]
+            if self.shape_selected_id != id:
+                print(1,"Le forme perd le focus")
+                shape = self.get_shape(self.shape_selected_id)
+                shape.unselected()
+                self.shape_selected_id = None
+        elif len(ids) == 0:
+            if self.shape_selected_id is not None:
+                print(1,"Le forme perd le focus")
+                shape = self.get_shape(self.shape_selected_id)
+                shape.unselected()
+                self.shape_selected_id = None
+
+        print(3,self.shape_selected_id)
+
+
     """ Actions associes aux formes """
 
     def get_current_shape_id(self):
@@ -148,8 +165,17 @@ class PicCanvas(tk.Canvas):
 
     def config_shape_event(self,shape_id):
         """ Permet de configurer les evenements associes aux formes """
+        # Clique droit enfoncé
+        self.tag_bind(shape_id, "<ButtonPress-1>", self.shape_mouse_press_event)
+        # Clique droit relache
+        self.tag_bind(shape_id, "<ButtonRelease-1>", self.shape_mouse_release_event)
+        # Curseur entrant dans la forme
         self.tag_bind(shape_id,"<Enter>", self.shape_mouse_enter_event)
+        # Curseur sortant de la forme
+        self.tag_bind(shape_id,"<Leave>", self.shape_mouse_leave_event)
+        # Clique droit
         self.tag_bind(shape_id,"<Button-1>", self.shape_clicked)
+        # Drag
         self.tag_bind(shape_id,"<B1-Motion>", self.shape_drag_event)
 
     def get_current_shape(self):
@@ -162,33 +188,47 @@ class PicCanvas(tk.Canvas):
     """ Evenements """
 
     def shape_clicked(self,event):
+        # Deselection de la shape precedente
+
+        if self.shape_selected_id is not None:
+            previous_shape = self.get_shape(self.shape_selected_id)
+            previous_shape.unselected()
+            self.shape_selected_id = None
+
+        # Shape courante
         shape = self.get_current_shape()
         logger.debug(f"{shape} clicked")
 
+        # Mise ajour de l'id de la Shape sélectionnée
+        self.shape_selected_id = shape.id
+
         # Donne le focus à la focus
-        shape.onClick()
+        shape.selected()
 
         # Mise a jour interne de la forme
         shape.internal_update_position_by_canvas() # Pas utile en vrai mais pour les test ouis
 
         # Mise a jour de l'inspecteur
         self.editor.shapeInspector.inspect(shape)
-
-    def shape_mouse_enter_event(self,event):
-        shape_id = self.get_current_shape_id()
-        self.log_shape_event(shape_id,event)
     
     def shape_drag_event(self,event):
+
+        self.is_shape_dragging=True
+
         shape_id = self.get_current_shape_id()
         shape = self.get_shape(shape_id)
+
         self.log_shape_event(shape_id,event)
+
+        # Deplacement de la forme
         dx, dy = naive_shape_drap_discrete_position_computer(event,self,shape_id)
         self.move(shape_id,dx,dy)
+
         logger.debug(f"Move Shape #{shape_id} with {(dx, dy)}") 
 
         # Mise a jour de ImageData (La mise est local) | Ce traitenement ne pas de faire ici
         position = self.coords(shape_id)
-        self.imageData.forms[shape_id-1]["position"] = tuple(position)
+        #self.imageData.forms[shape_id-1]["position"] = tuple(position)
         logger.debug(f"Shape #{shape_id} is now at {position}")  
 
         # Mise a jour interne de la forme
@@ -196,3 +236,32 @@ class PicCanvas(tk.Canvas):
 
         # Mise a jour de l'inspecteur
         self.editor.shapeInspector.inspect(shape)
+    
+    def shape_mouse_press_event(self,event):
+        shape = self.get_current_shape()
+        self.configure(cursor="fleur")
+        logger.debug(f"Showing pointer curcor: {shape} mouse press")
+    
+    def shape_mouse_release_event(self,event):
+        shape = self.get_current_shape()
+        self.is_shape_dragging=False
+        if self.is_cursor_in_shape:
+            self.configure(cursor="fleur")
+        logger.debug(f"Showing pointer curcor: {shape} mouse release")
+    
+    def shape_mouse_enter_event(self,event):
+        self.is_cursor_in_shape = True
+        shape = self.get_current_shape()
+        shape_id = shape.id
+        self.configure(cursor="fleur")
+        self.log_shape_event(shape_id,event)
+        logger.debug(f"Showing fleur curcor: {shape} mouse enter in")
+
+    def shape_mouse_leave_event(self,event):
+        self.is_cursor_in_shape = False
+        shape = self.get_current_shape()
+        if self.is_shape_dragging:
+            self.configure(cursor="fleur")
+        else:
+            self.configure(cursor="")
+        logger.debug(f"Showing pointer curcor: {shape} mouse leave out")
