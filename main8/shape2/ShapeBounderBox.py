@@ -3,6 +3,7 @@
     permettant de modifier les dimensions d'une Shape graphiquement 
 """
 from main8.tkinter import *
+from main8.log import logger
 
 class ShapeBounderBox:
 
@@ -10,7 +11,7 @@ class ShapeBounderBox:
     canvas_id:int
     canvas_tag:str
 
-    offset:int = 2
+    offset:int = 4
 
     def __init__(self,shape,canvas):
         self.shape=shape
@@ -19,7 +20,7 @@ class ShapeBounderBox:
     
     def create_bounderbox(self):
         rect = self.get_rect_from_shape()
-        self.canvas_id = self.canvas.create_rectangle(rect,dash=(3,3),outline="blue",state="hidden")
+        self.canvas_id = self.canvas.create_rectangle(rect,dash=(2,),outline="blue",state="hidden",width=1)
 
     def get_rect_from_shape(self) -> tuple:
         """ Calcul la nouvelle de forme en fonction de la shape"""
@@ -36,7 +37,11 @@ class ShapeBounderBox:
 
     def show(self):
         self.canvas.itemconfigure(self.canvas_id,state="normal")
-
+    
+    def shape_updated(self):
+        rect = self.get_rect_from_shape()
+        self.canvas.coords(self.canvas_id,rect)
+        logger.debug(f"Mise a jour de la BounderBox de la forme {self.shape}")
 
 
 

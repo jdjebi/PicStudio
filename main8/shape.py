@@ -40,7 +40,7 @@ class Shape:
         
         print("Color Map : ",self.name,"-",self.fill,"-",self.outline)
 
-        self.create_bounder_box()
+        self.bounderBox = ShapeBounderBox(self,self.canvas)
 
     def __str__(self):
         return f"{self.name} #{self.id}"
@@ -56,42 +56,13 @@ class Shape:
         self.height = y2 - y1
         self.center_x =  x1 + (self.width / 2)
         self.center_y = y2 - (self.height / 2)
-        self.update_bounder_box()
-        
-    def create_bounder_box(self):
-
-        self.bounderBox = ShapeBounderBox(self,self.canvas)
-
-        """
-        if self.type == "rectangle":
-            position = self.canvas.coords(self.id)
-            x1, y1, x2, y2 = position
-            offset = 1.5
-            x1 = x1 - offset
-            y1 = y1 - offset
-            x2 = x2 + offset
-            y2 = y2 + offset
-            new_position = x1, y1, x2, y2
-            self.rect_id = self.canvas.create_rectangle(new_position,dash=(3,3),outline="blue",state="disabled")
-        """
-
-    def update_bounder_box(self):
-        """
-        if self.type == "rectangle":
-            position = self.canvas.coords(self.id)
-            x1, y1, x2, y2 = position
-            offset = 1.5
-            x1 = x1 - offset
-            y1 = y1 - offset
-            x2 = x2 + offset
-            y2 = y2 + offset
-            new_position = x1, y1, x2, y2
-            self.canvas.coords(self.rect_id,new_position)
-        """
-        pass
-    
-    def onClick(self):
-        print("On a cliqué sur moi oh!!!!")
+        self.bounderBox.shape_updated()
 
     def get_rect(self):
         return self.canvas.coords(self.id)
+    
+    def selected(self):
+        self.bounderBox.show()
+    
+    def unselected(self):
+        self.bounderBox.hide()
