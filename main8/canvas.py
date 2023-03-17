@@ -5,7 +5,9 @@ from .positionners import centerize_placement
 from .canvas_shape import naive_shape_drap_discrete_position_computer
 from .cursor import CursorPosition
 from .ImageData import ImageData
-from main8.shape import Shape, ShapeBuilder, CanvasShapeDrawer
+from main8.shape import Shape
+from main8.shape2.ShapeBuilder import ShapeBuilder
+from main8.shape2.CanvasShapeDrawer import CanvasShapeDrawer
 
 logging.basicConfig(format='[%(levelname)s] : %(module)s : %(message)s')
 logger = logging.getLogger("PicCanvas")
@@ -84,15 +86,25 @@ class PicCanvas(tk.Canvas):
 
     def create_shape(self,shape_name) -> Shape:
         # Construit une forme avec une positionnement au centre de la scene
+
         form = self.shapeBuilder.build(shape_name) 
+
         logger.info(f"Creation de la forme : '{shape_name}' avec : {form}")
+
         id = self.canvasShapeDrawer.draw(form)
+
         shape = Shape(self,id,shape_name,form)
+
         logger.info(f"Enregistrement de : {shape}")
+
         self.canvas_shape_database_index.append(id)
+
         self.canvas_shape_database_map[id] = shape
+
         self.config_shape_event(id)
+
         self.register_shape(id,form,shape)
+
         return shape
 
     def register_shape(self,cform_id:int,form:dict,shape:Shape,form_append=True):
@@ -154,7 +166,7 @@ class PicCanvas(tk.Canvas):
         logger.debug(f"{shape} clicked")
 
         # Donne le focus à la focus
-        shape.focus_on()
+        shape.onClick()
 
         # Mise a jour interne de la forme
         shape.internal_update_position_by_canvas() # Pas utile en vrai mais pour les test ouis

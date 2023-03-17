@@ -1,12 +1,14 @@
-from .positionners import centerize_placement
-from .fonctions import hexaColorFromRGB
 from main8.tkinter import *
+from main8.shape2.ShapeBounderBox import ShapeBounderBox
 
 class Shape:
 
     canvas=None
     type=None
     name="Shape"
+
+    # ShapeBounderBox
+    bounderBox=None
 
     # Dictionnaire representant les caracteristiques de la form
     form:dict 
@@ -29,11 +31,8 @@ class Shape:
         self.type = name
         self.name = name.title()
         self.form = form
-
         self.x1, self.y1, self.x2, self.y2 =self.canvas.coords(id)
-
         self.fill = canvas.itemcget(id,"fill")
-
         if self.type=="line":
             self.outline = ""
         else:
@@ -59,8 +58,11 @@ class Shape:
         self.center_y = y2 - (self.height / 2)
         self.update_bounder_box()
         
-    
     def create_bounder_box(self):
+
+        self.bounderBox = ShapeBounderBox(self,self.canvas)
+
+        """
         if self.type == "rectangle":
             position = self.canvas.coords(self.id)
             x1, y1, x2, y2 = position
@@ -71,8 +73,10 @@ class Shape:
             y2 = y2 + offset
             new_position = x1, y1, x2, y2
             self.rect_id = self.canvas.create_rectangle(new_position,dash=(3,3),outline="blue",state="disabled")
+        """
 
     def update_bounder_box(self):
+        """
         if self.type == "rectangle":
             position = self.canvas.coords(self.id)
             x1, y1, x2, y2 = position
@@ -83,79 +87,11 @@ class Shape:
             y2 = y2 + offset
             new_position = x1, y1, x2, y2
             self.canvas.coords(self.rect_id,new_position)
-    
-    def focus_on(self):
+        """
         pass
- 
+    
+    def onClick(self):
+        print("On a cliqué sur moi oh!!!!")
 
-class ShapeBuilder:
-    """ Construit les formes avec une logique JSON donc de dictionnaire """
-
-    form = {
-        "form": None,
-        "position": None,
-        "fill": None,
-        "outline": (0,0,0),
-        "width": None
-    }
-
-    canvas = None
-     
-    def __init__(self,canvas):
-        self.canvas = canvas
-
-    def build(self,shape_name):
-        new_form = self.form.copy()
-        if(shape_name == "rectangle"):
-            rect_default_width = 50
-            rect_default_height = 50
-            canvas_x_center = self.canvas.winfo_width() // 2
-            canvas_y_center = self.canvas.winfo_height() // 2
-            rect_pos = centerize_placement(canvas_x_center,canvas_y_center,rect_default_width,rect_default_height,offset=(3,4))
-            new_form["form"] = "rectangle"
-            new_form["position"] = rect_pos
-            #new_form["fill"] = (0,0,0)
-        elif(shape_name == "ellipse"):
-            rect_default_width = 50
-            rect_default_height = 50
-            canvas_x_center = self.canvas.winfo_width() // 2
-            canvas_y_center = self.canvas.winfo_height() // 2
-            rect_pos = centerize_placement(canvas_x_center,canvas_y_center,rect_default_width,rect_default_height,offset=(3,4))
-            new_form["form"] = "ellipse"
-            new_form["position"] = rect_pos  
-            #new_form["fill"] = (0,0,0)    
-        elif(shape_name == "line"):
-            rect_default_width = 50
-            rect_default_height = 50
-            canvas_x_center = self.canvas.winfo_width() // 2
-            canvas_y_center = self.canvas.winfo_height() // 2
-            rect_pos = centerize_placement(canvas_x_center,canvas_y_center,rect_default_width,rect_default_height,offset=(3,4))
-            new_form["form"] = "line"
-            new_form["fill"] = (0,0,0)
-            new_form["position"] = rect_pos
-            new_form["width"] = 1
-        else:
-            raise Exception("Forme '{shape_name}' inconnue")
-        return new_form
-
-
-class CanvasShapeDrawer:
-
-    canvas = None
-     
-    def __init__(self,canvas):
-        self.canvas = canvas
-
-    def draw(self,form):
-        position = form['position']
-        fill = hexaColorFromRGB(form['fill'])
-        outline = hexaColorFromRGB(form['outline'])
-        width = form['width']
-        if(form["form"]=="rectangle"):
-            cform_id = self.canvas.create_rectangle(position,fill=fill,outline=outline)
-        elif(form["form"]=="ellipse"):
-            cform_id = self.canvas.create_oval(position,fill=fill,outline=outline)
-        elif(form["form"]=="line"):
-            cform_id = self.canvas.create_line(position,fill=fill,width=width)
-        return cform_id
-
+    def get_rect(self):
+        return self.canvas.coords(self.id)

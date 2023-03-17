@@ -1,6 +1,7 @@
 [] Redimensionnement des formes (Rectangle)
     - Reorganiser le code
     - Ajouter une couche de selection lorsqu'un forme est sélectionnée
+    - Faire en sorte que forme et sa bounderbox ai le met groupe (self-group-rectangle#1)
 [x] Ajouter une section pour voir la taille de la forme et celle des bordure
 [x] Faire en sorte que l'inpecteur affiche les proprietes des formes
 [x] Panneau pour manipuler les proprietes des formes (Inpecteur de forme)
