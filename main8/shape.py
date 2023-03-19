@@ -66,3 +66,9 @@ class Shape:
     
     def unselected(self):
         self.bounderBox.hide()
+    
+    def dragging(self):
+        self.bounderBox.hide()
+    
+    def released(self):
+        self.bounderBox.show()

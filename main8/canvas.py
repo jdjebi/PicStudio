@@ -220,6 +220,9 @@ class PicCanvas(tk.Canvas):
 
         self.log_shape_event(shape_id,event)
 
+        # On informe la shape qu'on la deplace
+        shape.dragging()
+
         # Deplacement de la forme
         dx, dy = naive_shape_drap_discrete_position_computer(event,self,shape_id)
         self.move(shape_id,dx,dy)
@@ -245,6 +248,10 @@ class PicCanvas(tk.Canvas):
     def shape_mouse_release_event(self,event):
         shape = self.get_current_shape()
         self.is_shape_dragging=False
+
+        # On informe la shape qu'on la relaché
+        shape.released()
+
         if self.is_cursor_in_shape:
             self.configure(cursor="fleur")
         logger.debug(f"Showing pointer curcor: {shape} mouse release")

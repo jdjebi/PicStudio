@@ -13,6 +13,8 @@ window.editorFrame.canvas.update()
 
 shape = window.editorFrame.canvas.create_shape("rectangle")
 
+
+
 def resize_by_adding(x):
     print(x)
     print(shape)
